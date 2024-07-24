@@ -2,7 +2,9 @@
 <html>
 <head>
     <title>PDF Query App</title>
-    <link rel="stylesheet" href="styles.css">
+  <!-- Using url_for to correctly reference the static CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    
 </head>
 <body>
     <h1>Upload PDF and Ask Questions</h1>
