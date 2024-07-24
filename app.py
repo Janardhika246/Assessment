@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template
-import fitz  # PyMuPDF
+import fitz 
 import requests
 
 app = Flask(__name__)
@@ -15,16 +15,16 @@ def query_pdf():
     file = request.files['pdf_file']
     question = request.form['question']
 
-    # Process the PDF file and prepare it for querying
+   
     pdf_text = process_pdf(file)
 
-    # Query using Gemini API
+    
     response = query_gemini_api(pdf_text, question)
 
     return response
 
 def process_pdf(file):
-    # Using PyMuPDF to extract text from the PDF
+   
     pdf_document = fitz.open(stream=file.read(), filetype="pdf")
     pdf_text = ""
     for page_num in range(pdf_document.page_count):
