@@ -34,15 +34,20 @@ def process_pdf(file):
 
 def query_gemini_api(pdf_text, question):
     headers = {
-        'Authorization': 'Bearer AIzaSyAFt3EOfTkY5eZXF3k-9IDowvUTL6lBPJo',  # Your Gemini API key
+        'Authorization': f'Bearer {os.getenv("GEMINI_API_KEY")}',  # Secure API key storage
         'Content-Type': 'application/json'
     }
     data = {
         'documents': [pdf_text],
         'question': question
     }
-    response = requests.post('https://api.gemini.com/query', headers=headers, json=data)
-    return response.json().get('answers', ['No answer found'])[0]
+    try:
+        response = requests.post('https://api.gemini.com/query', headers=headers, json=data)
+        answer = response.json().get('answers')
+        return answer[0] if answer else 'No answer found'
+    except Exception as e:
+        return str(e)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
