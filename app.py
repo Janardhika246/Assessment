@@ -9,9 +9,9 @@ import bcrypt
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///databse.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
-app.secret_key = 'decret_key'
+app.secret_key = 'secret_key'
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -19,18 +19,16 @@ class User(db.Model):
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
 
-    def __init__(self,email,password,name):
+    def __init__(self, name, email, password):
         self.name = name
         self.email = email
-        self.password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.getsalt()).decode('utf-8')
+        self.password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
-    def check_password(self,password):
-        return bcrypt.checkpw(password.encode('utf-8'),self.password.encode('utf-8'))  
+    def check_password(self, password):
+        return bcrypt.checkpw(password.encode('utf-8'), self.password.encode('utf-8'))
 
 with app.app_context():
-    db.create_all()          
-
-load_dotenv()  # Load environment variables from a .env file
+    db.create_all()
 
 # Configure Google API Key directly
 genai.configure(api_key='AIzaSyAFt3EOfTkY5eZXF3k-9IDowvUTL6lBPJo')
@@ -85,54 +83,44 @@ def query_gemini_api(pdf_text, question):
     response = requests.post('https://api.gemini.com/query', headers=headers, json=data)
     return response.json().get('answers', ['No answer found'])[0]
 
-if __name__ == '__main__':
-    app.run(debug=True)
-
-@app.route('/register',methods=['GET','POST'])
+@app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        # handle request
         name = request.form['name']
         email = request.form['email']
         password = request.form['password']
 
-        new_user = User(name=name,email=email,password=password)
+        new_user = User(name=name, email=email, password=password)
         db.session.add(new_user)
         db.session.commit()
         return redirect('/login')
 
-          
     return render_template('register.html')
 
-@app.route('/login',methods=['GET','POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-          email = request.form['email']
-          password = request.form['password']
-
-          user = User.query.filter_by(email=email).first()
-
-          if user and user.check_password(password):
+        email = request.form['email']
+        password = request.form['password']
+        user = User.query.filter_by(email=email).first()
+        if user and user.check_password(password):
             session['email'] = user.email
             return redirect('/dashboard')
         else:
-            return render_template('login.html',error='Invalid user')
-
+            return render_template('login.html', error='Invalid user')
     return render_template('login.html')
-
 
 @app.route('/dashboard')
 def dashboard():
-    if session['name']
-    user = User.query.filter_by(email=session['email']).first()
-    return render_template('dashboard.html',user=user)
-
-return redirect('/login')
+    if 'email' in session:
+        user = User.query.filter_by(email=session['email']).first()
+        return render_template('dashboard.html', user=user)
+    return redirect('/login')
 
 @app.route('/logout')
 def logout():
-    session.pop('email',None)
+    session.pop('email', None)
     return redirect('/login')
 
-if __name__=='__main__':
+if __name__ == '__main__':
     app.run(debug=True)
