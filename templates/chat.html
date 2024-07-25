@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat about PDF</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+
+</head>
+<body>
+    <h1>Discuss PDF Content</h1>
+    <form method="post">
+        <textarea name="message" placeholder="Ask something about the PDF content..." required></textarea>
+        <button type="submit">Send</button>
+    </form>
+    <div id="chatHistory" style="white-space: pre-wrap;">
+        {{ history|safe }}
+    </div>
+    <a href="/">Upload Another PDF</a>
+</body>
+</html>
