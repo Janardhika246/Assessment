@@ -24,7 +24,6 @@ app.config['MYSQL_DB'] = 'users'
 mysql = MySQL(app)
 
 @app.route('/', methods=['GET', 'POST'])
-@app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
         pdf_file = request.files['pdf_file']
