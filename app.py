@@ -16,10 +16,10 @@ load_dotenv()  # Load environment variables from a .env file
 # Configure Google API Key directly
 genai.configure(api_key='AIzaSyAFt3EOfTkY5eZXF3k-9IDowvUTL6lBPJo')
 
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '123456789'
-app.config['MYSQL_DB'] = 'users'
+app.config['MYSQL_HOST'] = os.getenv('DATABASE_HOST', 'localhost')
+app.config['MYSQL_USER'] = os.getenv('DATABASE_USER', 'root')
+app.config['MYSQL_PASSWORD'] = os.getenv('DATABASE_PASSWORD', '123456789')
+app.config['MYSQL_DB'] = os.getenv('DATABASE_NAME', 'users')
 
 mysql = MySQL(app)
 
