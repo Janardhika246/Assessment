@@ -5,3 +5,4 @@ requests==2.31.0
 google-generativeai
 python-dotenv
 mysqlclient
+flask_mysqldb
