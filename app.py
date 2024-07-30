@@ -24,14 +24,21 @@ app.config['MYSQL_DB'] = 'users'
 mysql = MySQL(app)
 
 @app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
         pdf_file = request.files['pdf_file']
         if pdf_file:
             pdf_text = process_pdf(pdf_file)
             session['pdf_text'] = pdf_text
-            return redirect(url_for('chat'))
-    return render_template('upload.html')
+            if 'loggedin' in session and session['loggedin']:
+                return redirect(url_for('chat'))
+            else:
+                return redirect(url_for('login'))
+    if 'loggedin' in session and session['loggedin']:
+        return render_template('index.html')
+    return render_template('login.html')
+
 
 @app.route('/chat', methods=['GET', 'POST'])
 def chat():
@@ -125,4 +132,4 @@ def register():
     return render_template('register.html', mesage=mesage)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True) 
