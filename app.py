@@ -1,11 +1,9 @@
 from flask import Flask, request, render_template, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 import fitz  # PyMuPDF
-import requests
 import os
 import google.generativeai as genai
 from dotenv import load_dotenv
-import re
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -15,7 +13,7 @@ load_dotenv()  # Load environment variables from a .env file
 # Configure Google API Key directly
 genai.configure(api_key='AIzaSyAFt3EOfTkY5eZXF3k-9IDowvUTL6lBPJo')
 
-# SQLite configuration
+# Configure SQLite database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -23,9 +21,11 @@ db = SQLAlchemy(app)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100))
-    email = db.Column(db.String(100), unique=True)
-    password = db.Column(db.String(100))
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), unique=True, nullable=False)
+    password = db.Column(db.String(100), nullable=False)
+
+db.create_all()
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -70,6 +70,20 @@ def process_pdf(pdf_file):
     pdf_document.close()
     return pdf_text
 
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    if 'loggedin' not in session:
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        query = request.form['query']
+        results = []
+        if 'history' in session:
+            results = [item for item in session['history'] if query.lower() in item['text'].lower()]
+        return render_template('search.html', query=query, results=results)
+
+    return render_template('search.html')
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     mesage = ''
@@ -102,8 +116,8 @@ def register():
         userName = request.form['name']
         password = request.form['password']
         email = request.form['email']
-        existing_user = User.query.filter_by(email=email).first()
-        if existing_user:
+        account = User.query.filter_by(email=email).first()
+        if account:
             mesage = 'Account already exists!'
         elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
             mesage = 'Invalid email address!'
@@ -119,6 +133,4 @@ def register():
     return render_template('register.html', mesage=mesage)
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
     app.run(debug=True)
