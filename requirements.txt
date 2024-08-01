@@ -4,5 +4,4 @@ PyMuPDF==1.21.0
 requests==2.31.0
 google-generativeai
 python-dotenv
-mysqlclient
-flask_mysqldb
+
