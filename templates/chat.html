@@ -1,8 +1,8 @@
+<!DOCTYPE html>
 <html>
 <head>
     <title>Chat about PDF</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
-
 </head>
 <body>
     <h1>Discuss PDF Content</h1>
@@ -10,8 +10,13 @@
         <textarea name="message" placeholder="Ask something about the PDF content..." required></textarea>
         <button type="submit">Send</button>
     </form>
-    <div id="chatHistory" style="white-space: pre-wrap;">
-        {{ history|safe }}
+    <div id="chatHistory">
+        {% for item in history %}
+            <div class="{{ item.role }}">
+                <strong>{{ item.timestamp }} {{ item.role|capitalize }}:</strong>
+                <p>{{ item.text }}</p>
+            </div>
+        {% endfor %}
     </div>
     <a href="/">Upload Another PDF</a>
 </body>

@@ -1,11 +1,11 @@
 from flask import Flask, request, render_template, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 import fitz  # PyMuPDF
-import requests
-import os
 import google.generativeai as genai
 from dotenv import load_dotenv
 import re
+from datetime import datetime
+import os
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -52,15 +52,16 @@ def chat():
         model = genai.GenerativeModel('gemini-1.5-flash')
         chat_session = model.start_chat(history=[])
         response = chat_session.send_message(session['pdf_text'] + "\n\n" + user_input)
-        if 'history' not in session:
-            session['history'] = []
-        session['history'].append({'role': 'user', 'text': user_input})
-        session['history'].append({'role': 'model', 'text': response.text})
-    else:
-        session['history'] = []
 
-    history_display = '\n\n'.join(f"**{item['role']}**: {item['text']}" for item in session['history'])
-    return render_template('chat.html', history=history_display)
+        # Append new messages to chat history with timestamp
+        if 'chat_history' not in session:
+            session['chat_history'] = []
+        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        session['chat_history'].append({'role': 'user', 'text': user_input, 'timestamp': timestamp})
+        session['chat_history'].append({'role': 'model', 'text': response.text, 'timestamp': timestamp})
+
+    # Display entire chat history for the current PDF
+    return render_template('chat.html', history=session.get('chat_history', []))
 
 def process_pdf(pdf_file):
     pdf_document = fitz.open(stream=pdf_file.read(), filetype="pdf")
@@ -72,7 +73,7 @@ def process_pdf(pdf_file):
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    mesage = ''
+    message = ''
     if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
         email = request.form['email']
         password = request.form['password']
@@ -82,11 +83,11 @@ def login():
             session['userid'] = user.id
             session['name'] = user.name
             session['email'] = user.email
-            mesage = 'Logged in successfully!'
-            return render_template('index.html', mesage=mesage)
+            message = 'Logged in successfully!'
+            return render_template('index.html', message=message)
         else:
-            mesage = 'Please enter correct email / password!'
-    return render_template('login.html', mesage=mesage)
+            message = 'Please enter correct email / password!'
+    return render_template('login.html', message=message)
 
 @app.route('/logout')
 def logout():
@@ -97,26 +98,26 @@ def logout():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    mesage = ''
+    message = ''
     if request.method == 'POST' and 'name' in request.form and 'password' in request.form and 'email' in request.form:
         userName = request.form['name']
         password = request.form['password']
         email = request.form['email']
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
-            mesage = 'Account already exists!'
+            message = 'Account already exists!'
         elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
-            mesage = 'Invalid email address!'
+            message = 'Invalid email address!'
         elif not userName or not password or not email:
-            mesage = 'Please fill out the form!'
+            message = 'Please fill out the form!'
         else:
             new_user = User(name=userName, email=email, password=password)
             db.session.add(new_user)
             db.session.commit()
-            mesage = 'You have successfully registered!'
+            message = 'You have successfully registered!'
     elif request.method == 'POST':
-        mesage = 'Please fill out the form!'
-    return render_template('register.html', mesage=mesage)
+        message = 'Please fill out the form!'
+    return render_template('register.html', message=message)
 
 if __name__ == '__main__':
     with app.app_context():
