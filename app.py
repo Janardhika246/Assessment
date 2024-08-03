@@ -30,7 +30,7 @@ class User(db.Model):
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        pdf_file = request.files['pdf_file']
+        pdf_file = request.files.get('pdf_file')
         if pdf_file:
             pdf_text = process_pdf(pdf_file)
             session['pdf_text'] = pdf_text
@@ -84,7 +84,7 @@ def login():
             session['name'] = user.name
             session['email'] = user.email
             message = 'Logged in successfully!'
-            return render_template('index.html', message=message)
+            return redirect(url_for('index'))
         else:
             message = 'Please enter correct email / password!'
     return render_template('login.html', message=message)
@@ -123,5 +123,3 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
     app.run(debug=True)
-
-    
