@@ -7,31 +7,59 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">         
 </head>
 <body class="index-page">
-    <div class="container">
-        <div class="row">    
-            <h1> Welcome Back</h1>
+    
+ 
+    <nav class="nav">
+        <div class="nav-logo"><p>ChatPDF</p> </div>
+        <div class="nav-menu" id="navMenu">
+            <ul>
+                <li><a href="#" class="link">Research</a></li>
+                <li><a href="#" class="link">Products</a></li>
+                <li><a href="#" class="link">Safety</a></li>
+                <li><a href="#" class="link">Company</a></li>
+            </ul>
         </div>
-        <br>
-        <div class="row">    
-            Logged in :  <strong>{{ session.name}} | <a href="{{ url_for('logout') }}"> Logout</a>
+        
+        <div class="row5"><strong>{{ session.name}}  </strong> </div> 
+        <div class="nav-button">
+            <button class="btn white-btn"> <a href="{{ url_for('logout') }}"> Logout</a></button>
+        </div>   
+    </nav>
+    
+    <div class="wrap">
+        <div class="date">
+            <h2> February 18, 2022 </h2> 
         </div>
-        <br><br>
-        <div class="row">
+        <div class="intro">
             <h2> Introducing ChatPDF </h2> 
         </div>
 
-        <div class="welcomepara"> 
-            <p> We've developed a platform called ChatPDF that enables users to interact with their PDF documents in a conversational way. By simply uploading a PDF, users can ask questions about its content and receive detailed answers. ChatPDF leverages advanced AI technology to provide accurate and relevant responses, making it an invaluable tool for extracting information from documents. Best of all, ChatPDF is completely free to use, so try it now and experience the ease of conversational document interaction. </p>
+        <div class="bar">  
+            <ui>
+                <li><a href="#">Get Premium</a></li>
+                <li><a href="#">Download ChatPDF desktop</a></li>
+                <li><a href="#">Learn about ChatPDF</a></li>
+            </ui>
         </div>
 
-        <h1>Upload a PDF to Start Chat</h1>
-        <form action="/" method="post" enctype="multipart/form-data">
-            <input type="file" name="pdf_file" required>
-            <input type="submit" value="Upload and Chat">
+        <div class="welcomepara"> 
+            <p>We've developed a platform called ChatPDF that allows users to interact with their PDF documents in a conversational way. By simply uploading a PDF, users can ask questions about its content and receive detailed answers, making document interaction intuitive and efficient. </p>
+            <p>ChatPDF is a sibling model to InstructGPT, which is trained to follow an instruction in a prompt and provide a detailed response. </p>
+            <P>We are excited to introduce ChatPDF to get users’ feedback and learn about its strengths and weaknesses. During the research preview, usage of ChatPDF is free.  </P>
+        </div>
+    <div class="try">
+        <h1>Try ChatPDF</h1>
+        
+        <div class="choose">
+            <form action="/" method="post" enctype="multipart/form-data">
+            <input type="file"  class="customfile" name="pdf_file" required>
+           <input type="submit" value="Upload">
         </form> 
-
+    </div>
+    </div>
+        </div>
         <footer>
-            <div class="container">
+            <div class="contain">
                 <div class="row">
                     <div class="footer-col">
                         <h4>Our Research</h4>
@@ -78,7 +106,7 @@
                     </div>
                 </div>
             </div>
-            <div class="footer-container">
+            <div class="footer-foot">
                 <div class="footerBottom">
                     <p> ChatPDF &copy;2024</p>
                 </div>
@@ -93,6 +121,5 @@
                 </div>
             </div>
         </footer>
-    </div>
 </body>
 </html>
