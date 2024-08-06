@@ -9,6 +9,11 @@ body {
     box-sizing: border-box;
 }
 
+body::-webkit-scrollbar {
+    width: 0px;
+    background: transparent; /* Optional: just to visualize the scrollbar track */
+}
+
 .login-page, .register-page, .index-page {
     margin: 0;
     justify-content: center;
@@ -299,6 +304,8 @@ ul {
     margin-right: -42rem;
 }
 
+
+/* Footer */
 .footer-col {
     width: 20%;
     justify-content: center;
@@ -379,6 +386,157 @@ ul {
     margin-left: -650px;
     text-align: left;
 }
+
+/* chat page starting */
+
+
+  
+  /* .chatHistory{
+    display: flex;
+    gap: 20px;
+    padding: 125px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 300;
+    justify-content: center;
+    text-align: justify;
+  } */
+  
+ 
+  /* .response{
+    background-color: #494b59;
+  } */
+  
+  .question{
+    position: fixed;
+    bottom: 0;
+    height: 5rem;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top: 1px solid #494b59;
+    background-color: #212121;
+    /* margin: 15px; */
+ 
+  }
+  
+  .question form{
+    background-color: #2f2f2f;
+    border-radius: 25px;
+    width: 60vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    overflow-y: auto;
+    /* padding: 10px; */
+
+  }
+  
+  .question textarea{
+    width: 100%;
+    padding: 5px;
+    border: none;
+    outline: none;
+    font-size: 15px;
+    background: none;
+    color: #ccc;
+    /* margin: 5px; */
+    align-items: center;
+    resize: vertical;
+    overflow-y: auto;
+    /* min-height: 20px;  */
+    max-height: 200px; /* Maximum height */
+    justify-content: center;
+    caret-color: red;
+    box-sizing: border-box;
+   
+
+  }
+  
+  .question textarea::placeholder{
+    color: #ccc;
+    padding: 10px;
+    justify-content: center;
+    text-align: left;
+  }
+  
+  .question button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  .welcome img{
+    width: 85px;
+    height: 85px;
+    margin-left:60px; 
+   /* margin-top: 25px;  */
+  }
+  
+  .welcome{
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    /*height: calc(100vh - 0.5rem); 
+    /* font-size: 25px; */
+    padding: 20px; 
+    /* margin-left: 100px; */
+  }
+
+  .chat-page{
+    width: 100%;
+    height: 100%;
+    background-color: #212121;    
+    margin-bottom: 150px;
+  }
+
+  .chatHistory{
+    /* height: calc(100vh - 0.5rem); */
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .user{
+    padding-left: 50px;
+    padding-right: 50px;
+    justify-content: center;
+    text-align: justify;
+    background-color: #2f2f2f;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    width: 1000px;
+    height: auto;
+    border: 2px solid rgba(255, 255, 255, 0);
+    border-radius: 15px;
+    margin: 50px;
+    margin-left: 200px;
+}
+
+
+  .model{
+    padding-left: 50px;
+    padding-right: 50px;
+    justify-content: center;
+    text-align: justify;
+    background-color: #2f2f2f;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    width: 1000px;
+    height: auto;
+    border: 2px solid rgba(255, 255, 255, 0);
+    border-radius: 15px;
+    margin: 50px;
+    margin-left: 600px;
+
+  }
+  
+
+  /* Chat ends */
 
 @media (max-width: 767px) {
     .login-page, .register-page, .index-page {
