@@ -42,6 +42,11 @@ def index():
         return render_template('index.html')
     return render_template('login.html')
 
+def separate_points(text):
+    # This function can be customized based on your specific needs
+    # For now, we'll use newlines as separators
+    return text.split('\n')
+
 @app.route('/chat', methods=['GET', 'POST'])
 def chat():
     if 'pdf_text' not in session:
@@ -53,21 +58,37 @@ def chat():
         chat_session = model.start_chat(history=[])
         response = chat_session.send_message(session['pdf_text'] + "\n\n" + user_input)
 
-        # Append new messages to chat history with timestamp
+        # Process the response to separate points
+        separated_response = separate_points(response.text)
+
+        # Initialize chat history if not present
         if 'chat_history' not in session:
             session['chat_history'] = []
+
+        # Append new messages to chat history with timestamp
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         session['chat_history'].append({'role': 'user', 'text': user_input, 'timestamp': timestamp})
-        session['chat_history'].append({'role': 'model', 'text': response.text, 'timestamp': timestamp})
+        session['chat_history'].append({'role': 'model', 'text': separated_response, 'timestamp': timestamp})
 
     # Display entire chat history for the current PDF
     return render_template('chat.html', history=session.get('chat_history', []))
+
 
 def process_pdf(pdf_file):
     pdf_document = fitz.open(stream=pdf_file.read(), filetype="pdf")
     pdf_text = ''
     for page in pdf_document:
-        pdf_text += page.get_text()
+        # Extract text from the page
+        page_text = page.get_text("text")
+        
+        # Split the text into paragraphs based on blank lines
+        paragraphs = page_text.split('\n\n')
+        
+        # Join paragraphs with a break (or any other separator)
+        joined_paragraphs = '\n\n'.join(paragraphs)
+        
+        pdf_text += joined_paragraphs
+    
     pdf_document.close()
     return pdf_text
 
@@ -95,6 +116,9 @@ def logout():
     session.pop('userid', None)
     session.pop('email', None)
     return redirect(url_for('login'))
+
+
+   
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():

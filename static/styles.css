@@ -96,6 +96,10 @@ body::-webkit-scrollbar {
     color: #FFFFFF;
 }
 
+.another a .material-symbols-rounded {
+  font-size: 45px;
+}
+
 /* Alert styles */
 .alert {
     margin-bottom: 20px;
@@ -418,7 +422,18 @@ ul {
     border-top: 1px solid #494b59;
     background-color: #212121;
     /* margin: 15px; */
- 
+  }
+
+  .another{
+    Top: 0;
+    position: fixed;
+    text-align: right;
+    padding: 40px;
+    margin-left: 1550px;
+    display: flex;
+    flex-direction: row;
+    margin-right: 60px;
+    gap: 20px;
   }
   
   .question form{
@@ -430,12 +445,11 @@ ul {
     justify-content: space-between;
     overflow-y: auto;
     /* padding: 10px; */
-
   }
   
   .question textarea{
     width: 100%;
-    padding: 5px;
+    /* padding-top: 10px; */
     border: none;
     outline: none;
     font-size: 15px;
@@ -445,21 +459,17 @@ ul {
     align-items: center;
     resize: vertical;
     overflow-y: auto;
-    /* min-height: 20px;  */
-    max-height: 200px; /* Maximum height */
-    justify-content: center;
-    caret-color: red;
+    min-height: 50px; 
+    max-height: 1000px; /* Maximum height */
+    justify-content: space-between;
     box-sizing: border-box;
-   
+    border-top: 15px solid transparent; /* Simulate padding at the top */
+    border-bottom: 15px solid transparent; /* Simulate padding at the bottom */
+    border-right: 15px solid transparent; /* Prevent border artifacts */
+    border-left: 15px solid transparent; /* Prevent border artifacts */
+    outline: 1px solid #dadcde; /* Actual visible border */
 
-  }
-  
-  .question textarea::placeholder{
-    color: #ccc;
-    padding: 10px;
-    justify-content: center;
-    text-align: left;
-  }
+}
   
   .question button{
     display: flex;
@@ -515,6 +525,7 @@ ul {
     border-radius: 15px;
     margin: 50px;
     margin-left: 200px;
+    line-height: 1.5;
 }
 
 
@@ -534,7 +545,6 @@ ul {
     margin-left: 600px;
 
   }
-  
 
   /* Chat ends */
 
