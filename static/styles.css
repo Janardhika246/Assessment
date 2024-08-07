@@ -589,3 +589,24 @@ ul {
         padding-right: 0;
     }
 }
+
+@media (max-width: 768px) {
+    header ul {
+        text-align: center;
+    }
+
+    header ul li {
+        display: block;
+        margin: 5px 0;
+    }
+
+    .container {
+        width: 95%;
+        padding: 10px;
+    }
+
+    .chat-box {
+        height: 200px;
+    }
+
+}
