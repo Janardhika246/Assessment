@@ -21,11 +21,21 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
+# Define the User model
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
+
+# Define the ChatHistory model
+class ChatHistory(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    pdf_text = db.Column(db.Text, nullable=False)
+    question = db.Column(db.Text, nullable=False)  # Store the user's question
+    answer = db.Column(db.Text, nullable=False)    # Store the model's answer
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -43,8 +53,7 @@ def index():
     return render_template('login.html')
 
 def separate_points(text):
-    # This function can be customized based on your specific needs
-    # For now, we'll use newlines as separators
+    # Split text into individual points based on newlines
     return text.split('\n')
 
 @app.route('/chat', methods=['GET', 'POST'])
@@ -61,18 +70,22 @@ def chat():
         # Process the response to separate points
         separated_response = separate_points(response.text)
 
-        # Initialize chat history if not present
-        if 'chat_history' not in session:
-            session['chat_history'] = []
+        # Save question and response to the database
+        chat_history = ChatHistory(
+            user_id=session['userid'],
+            pdf_text=session['pdf_text'],
+            question=user_input,
+            answer=response.text,
+            timestamp=datetime.now()
+        )
+        db.session.add(chat_history)
+        db.session.commit()
 
-        # Append new messages to chat history with timestamp
-        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        session['chat_history'].append({'role': 'user', 'text': user_input, 'timestamp': timestamp})
-        session['chat_history'].append({'role': 'model', 'text': separated_response, 'timestamp': timestamp})
+    # Retrieve chat history for the current user and PDF
+    user_id = session['userid']
+    chat_history = ChatHistory.query.filter_by(user_id=user_id, pdf_text=session['pdf_text']).order_by(ChatHistory.timestamp).all()
 
-    # Display entire chat history for the current PDF
-    return render_template('chat.html', history=session.get('chat_history', []))
-
+    return render_template('chat.html', history=chat_history)
 
 def process_pdf(pdf_file):
     pdf_document = fitz.open(stream=pdf_file.read(), filetype="pdf")
@@ -116,9 +129,6 @@ def logout():
     session.pop('userid', None)
     session.pop('email', None)
     return redirect(url_for('login'))
-
-
-   
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():

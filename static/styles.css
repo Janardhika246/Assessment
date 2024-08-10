@@ -24,6 +24,11 @@ body::-webkit-scrollbar {
     min-height: 100vh;
 }
 
+#chat-window {
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
 .index-page {
     background-color: #111;
     padding: 100px;
@@ -484,12 +489,12 @@ ul {
     margin-bottom: 150px;
   }
 
-  .chatHistory{
+  .chat-window{
     overflow-y: auto;
     overflow-x: hidden;
   }
 
-  .user{
+    .chat-entry p:first-child {
     padding-left: 50px;
     padding-right: 50px;
     justify-content: center;
@@ -506,8 +511,7 @@ ul {
     line-height: 1.5;
 }
 
-
-  .model{
+.chat-entry p:nth-child(2){
     padding-left: 50px;
     padding-right: 50px;
     justify-content: center;
@@ -524,6 +528,7 @@ ul {
 
   }
 
+  
   /* Chat ends */
 
 @media (max-width: 767px) {
@@ -542,7 +547,7 @@ ul {
     }
 
     .nav-menu ul li .link {
-        font-size: 14px;
+        font-size: 14px;s
     }
 
     .btn {
